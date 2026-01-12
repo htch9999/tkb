@@ -2,12 +2,12 @@
   "name": "timetable-api",
   "version": "1.0.0",
   "dependencies": {
-    "@sparticuz/chromium-min": "^131.0.0",
+    "@sparticuz/chromium": "^131.0.0",
     "puppeteer-core": "^23.1.0",
     "jsdom": "^23.0.0",
     "busboy": "^1.6.0"
   },
   "engines": {
-    "node": ">=18.x"
+    "node": "20.x"
   }
 }
