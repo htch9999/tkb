@@ -4,6 +4,8 @@
       "memory": 2048,
       "maxDuration": 60
     }
+  },
+  "env": {
+    "CHROMIUM_PATH": "https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar"
   }
-
 }
