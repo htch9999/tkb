@@ -3,7 +3,6 @@ const { extractTable } = require('../lib/parser');
 const { renderToImage } = require('../lib/renderer');
 
 module.exports = async (req, res) => {
-  // Chỉ chấp nhận POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed. Use POST.' });
   }
@@ -14,33 +13,25 @@ module.exports = async (req, res) => {
     let tableId = '';
     let className = '';
 
-    // Case 1: Multipart form data (file upload)
     if (contentType.includes('multipart/form-data')) {
       const result = await parseMultipart(req);
       htmlContent = result.html;
       tableId = result.tableId;
       className = result.className;
-    }
-    // Case 2: JSON body
-    else if (contentType.includes('application/json')) {
-      const body = req.body;
-      htmlContent = body.html || '';
-      tableId = body.table_id || body.tableId || '';
-      className = body.class_name || body.className || '';
-    }
-    // Case 3: Raw text
-    else if (contentType.includes('text/plain')) {
-      htmlContent = req.body;
+    } else if (contentType.includes('application/json')) {
+      htmlContent = req.body.html || '';
+      tableId = req.body.table_id || req.body.tableId || '';
+      className = req.body.class_name || req.body.className || '';
+    } else if (contentType.includes('text/plain')) {
+      htmlContent = req.body.toString();
       tableId = req.query.table_id || req.query.tableId || '';
       className = req.query.class_name || req.query.className || '';
-    }
-    else {
+    } else {
       return res.status(400).json({ 
-        error: 'Unsupported Content-Type. Use multipart/form-data, application/json, or text/plain' 
+        error: 'Unsupported Content-Type' 
       });
     }
 
-    // Validate input
     if (!htmlContent) {
       return res.status(400).json({ error: 'Missing HTML content' });
     }
@@ -49,7 +40,6 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Missing table_id or class_name' });
     }
 
-    // Step 1: Extract table from HTML
     const extractedHtml = extractTable(htmlContent, tableId, className);
     
     if (!extractedHtml) {
@@ -59,24 +49,17 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Step 2: Render to image
     const imageBuffer = await renderToImage(extractedHtml);
-
-    // Check if debug mode
     const debug = req.query.debug === '1' || req.query.debug === 'true';
 
     if (debug) {
-      // Return JSON with base64
       return res.status(200).json({
         success: true,
         image: imageBuffer.toString('base64'),
-        width: 1024,
-        height: 1024,
         format: 'png'
       });
     }
 
-    // Default: Return binary image for iOS Shortcuts
     res.setHeader('Content-Type', 'image/png');
     res.setHeader('Content-Length', imageBuffer.length);
     return res.status(200).send(imageBuffer);
@@ -90,7 +73,6 @@ module.exports = async (req, res) => {
   }
 };
 
-// Parse multipart form data
 function parseMultipart(req) {
   return new Promise((resolve, reject) => {
     const busboy = Busboy({ headers: req.headers });
@@ -121,7 +103,6 @@ function parseMultipart(req) {
     });
 
     busboy.on('error', reject);
-
     req.pipe(busboy);
   });
 }
