@@ -1,11 +1,9 @@
 {
   "name": "timetable-api",
   "version": "1.0.0",
-  "description": "Serverless API to render HTML timetable to square image",
-  "main": "api/render.js",
   "dependencies": {
-    "chrome-aws-lambda": "^10.1.0",
-    "puppeteer-core": "^10.4.0",
+    "@sparticuz/chromium-min": "^131.0.0",
+    "puppeteer-core": "^23.1.0",
     "jsdom": "^23.0.0",
     "busboy": "^1.6.0"
   },
