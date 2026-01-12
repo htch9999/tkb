@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server.js"
   },
-{
   "dependencies": {
     "puppeteer-core": "^10.4.0",
     "chrome-aws-lambda": "^10.1.0",
@@ -18,6 +17,7 @@
     "node": ">=18.x"
   }
 }
+
 
 
 
