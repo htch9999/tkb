@@ -7,7 +7,7 @@
     "start": "node server.js"
   },
 "dependencies": {
-  "puppeteer": "^21.7.0",
+  "puppeteer": "^22.0.0",
   "jsdom": "^23.0.0",
   "busboy": "^1.6.0"
 },
@@ -15,6 +15,7 @@
     "node": ">=18.x"
   }
 }
+
 
 
 
